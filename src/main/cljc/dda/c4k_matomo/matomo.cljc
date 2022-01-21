@@ -12,12 +12,11 @@
 #?(:cljs
    (defmethod yaml/load-resource :matomo [resource-name]
      (case resource-name
-       ;"matomo/certificate.yaml" (rc/inline "matomo/certificate.yaml")
-       ;"matomo/deployment.yaml" (rc/inline "matomo/deployment.yaml")
-       ;"matomo/ingress.yaml" (rc/inline "matomo/ingress.yaml")
-       ;"matomo/persistent-volume.yaml" (rc/inline "matomo/persistent-volume.yaml")
-       ;"matomo/pvc.yaml" (rc/inline "matomo/pvc.yaml")
-       ;"matomo/service.yaml" (rc/inline "matomo/service.yaml")
+       "matomo/certificate.yaml" (rc/inline "matomo/certificate.yaml")
+       "matomo/deployments.yaml" (rc/inline "matomo/deployments.yaml")
+       "matomo/ingress.yaml" (rc/inline "matomo/ingress.yaml")  
+       "matomo/services.yaml" (rc/inline "matomo/services.yaml")
+       "matomo/statefulset.yaml" (rc/inline "matomo/statefulset.yaml")
        (throw (js/Error. "Undefined Resource!")))))
  
 (defn generate-certificate [config]
@@ -29,10 +28,11 @@
      (assoc-in [:spec :dnsNames] [fqdn])
      (assoc-in [:spec :issuerRef :name] letsencrypt-issuer))))
 
-(defn generate-deployment [config]
-  (let [{:keys [fqdn]} config]
-    (-> (yaml/from-string (yaml/load-resource "matomo/deployment.yaml"))
-        (cm/replace-named-value "FQDN" fqdn))))
+(defn generate-webserver-deployment []
+  (let [shynet-application "shynet-webserver"]
+    (-> (yaml/from-string (yaml/load-resource "matomo/deployments-template.yaml"))
+        (cm/replace-named-value "shynet-application" shynet-application)
+        (dissoc [:spec :template :spec :containers 0] :command))))
 
 (defn generate-ingress [config]
   (let [{:keys [fqdn issuer]
