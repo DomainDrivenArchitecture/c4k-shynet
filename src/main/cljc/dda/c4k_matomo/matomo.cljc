@@ -13,10 +13,10 @@
    (defmethod yaml/load-resource :matomo [resource-name]
      (case resource-name
        "matomo/certificate.yaml" (rc/inline "matomo/certificate.yaml")
-       "matomo/deployments.yaml" (rc/inline "matomo/deployments.yaml")
-       "matomo/ingress.yaml" (rc/inline "matomo/ingress.yaml")  
-       "matomo/services.yaml" (rc/inline "matomo/services.yaml")
-       "matomo/statefulset.yaml" (rc/inline "matomo/statefulset.yaml")
+       ;"matomo/deployments.yaml" (rc/inline "matomo/deployments.yaml")
+       ;"matomo/ingress.yaml" (rc/inline "matomo/ingress.yaml")  
+       ;"matomo/services.yaml" (rc/inline "matomo/services.yaml")
+       ;"matomo/statefulset.yaml" (rc/inline "matomo/statefulset.yaml")
        (throw (js/Error. "Undefined Resource!")))))
  
 (defn generate-certificate [config]
@@ -31,8 +31,8 @@
 (defn generate-webserver-deployment []
   (let [shynet-application "shynet-webserver"]
     (-> (yaml/from-string (yaml/load-resource "matomo/deployments-template.yaml"))
-        (cm/replace-named-value "shynet-application" shynet-application)
-        (dissoc [:spec :template :spec :containers 0] :command))))
+        (cm/replace-all-matching-values-by-new-value "shynet-application" shynet-application)
+        (update-in [:spec :template :spec :containers 0] dissoc :command))))
 
 (defn generate-ingress [config]
   (let [{:keys [fqdn issuer]
