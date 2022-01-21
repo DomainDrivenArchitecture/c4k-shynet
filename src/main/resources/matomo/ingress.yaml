@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: shynet-webserver-ingress
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging-issuer
     kubernetes.io/ingress.class: addon-http-application-routing
     nginx.ingress.kubernetes.io/proxy-body-size: "256m"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -14,7 +15,7 @@ spec:
   tls:
   - hosts:
     - fqdn
-    secretName: jira-secret
+    secretName: shynet-secret
   rules:
   - host: fqdn
     http:

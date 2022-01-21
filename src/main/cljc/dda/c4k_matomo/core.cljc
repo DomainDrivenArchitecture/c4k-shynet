@@ -18,7 +18,14 @@
 (defn k8s-objects [config]
   (into
    []
-   (concat [])))
+   (concat 
+    [(yaml/to-string (matomo/generate-webserver-deployment))
+     (yaml/to-string (matomo/generate-celeryworker-deployment))
+     (yaml/to-string (matomo/generate-ingress config))
+     (yaml/to-string (matomo/generate-certificate config))
+     (yaml/to-string (matomo/generate-service-redis))
+     (yaml/to-string (matomo/generate-service-webserver))
+     (yaml/to-string (matomo/generate-statefulset))])))
 
 (defn-spec generate any?
   [my-config config?

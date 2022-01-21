@@ -13,10 +13,11 @@
    (defmethod yaml/load-resource :matomo [resource-name]
      (case resource-name
        "matomo/certificate.yaml" (rc/inline "matomo/certificate.yaml")
-       ;"matomo/deployments.yaml" (rc/inline "matomo/deployments.yaml")
-       ;"matomo/ingress.yaml" (rc/inline "matomo/ingress.yaml")  
-       ;"matomo/services.yaml" (rc/inline "matomo/services.yaml")
-       ;"matomo/statefulset.yaml" (rc/inline "matomo/statefulset.yaml")
+       "matomo/deployments.yaml" (rc/inline "matomo/deployments.yaml")
+       "matomo/ingress.yaml" (rc/inline "matomo/ingress.yaml")  
+       "matomo/service-redis.yaml" (rc/inline "matomo/service-redis.yaml")
+       "matomo/service-webserver.yaml" (rc/inline "matomo/service-webserver.yaml")
+       "matomo/statefulset.yaml" (rc/inline "matomo/statefulset.yaml")
        (throw (js/Error. "Undefined Resource!")))))
  
 (defn generate-certificate [config]
@@ -30,9 +31,14 @@
 
 (defn generate-webserver-deployment []
   (let [shynet-application "shynet-webserver"]
-    (-> (yaml/from-string (yaml/load-resource "matomo/deployments-template.yaml"))
+    (-> (yaml/from-string (yaml/load-resource "matomo/deployments.yaml"))
         (cm/replace-all-matching-values-by-new-value "shynet-application" shynet-application)
         (update-in [:spec :template :spec :containers 0] dissoc :command))))
+
+(defn generate-celeryworker-deployment []
+  (let [shynet-application "shynet-celeryworker"]
+    (-> (yaml/from-string (yaml/load-resource "matomo/deployments.yaml"))
+        (cm/replace-all-matching-values-by-new-value "shynet-application" shynet-application))))
 
 (defn generate-ingress [config]
   (let [{:keys [fqdn issuer]
@@ -43,14 +49,11 @@
      (assoc-in [:metadata :annotations :cert-manager.io/cluster-issuer] letsencrypt-issuer)
      (cm/replace-all-matching-values-by-new-value "fqdn" fqdn))))
 
-(defn generate-persistent-volume [config]
-  (let [{:keys [matomo-data-volume-path]} config]
-    (-> 
-     (yaml/from-string (yaml/load-resource "matomo/persistent-volume.yaml"))
-     (assoc-in [:spec :hostPath :path] matomo-data-volume-path))))
+(defn generate-statefulset []
+  (yaml/from-string (yaml/load-resource "matomo/statefulset.yaml")))
 
-(defn generate-pvc []
-  (yaml/from-string (yaml/load-resource "matomo/pvc.yaml")))
+(defn generate-service-redis []
+  (yaml/from-string (yaml/load-resource "matomo/service-redis.yaml")))
 
-(defn generate-service []
-  (yaml/from-string (yaml/load-resource "matomo/service.yaml")))
+(defn generate-service-webserver []
+  (yaml/from-string (yaml/load-resource "matomo/service-webserver.yaml")))
