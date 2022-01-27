@@ -1,4 +1,4 @@
-(ns dda.c4k-matomo.core
+(ns dda.c4k-shynet.core
  (:require
   [clojure.string :as cs]
   [clojure.spec.alpha :as s]
@@ -6,12 +6,12 @@
      :cljs [orchestra.core :refer-macros [defn-spec]])
   [dda.c4k-common.yaml :as yaml]
   [dda.c4k-common.postgres :as postgres]
-  [dda.c4k-matomo.matomo :as matomo]))
+  [dda.c4k-shynet.shynet :as shynet]))
 
 (def config-defaults {:issuer :staging})
 
-(def config? (s/keys :req-un [::matomo/fqdn]
-                     :opt-un [::matomo/issuer ::postgres/postgres-data-volume-path]))
+(def config? (s/keys :req-un [::shynet/fqdn]
+                     :opt-un [::shynet/issuer ::postgres/postgres-data-volume-path]))
 
 (def auth? (s/keys :req-un [::postgres/postgres-db-user ::postgres/postgres-db-password])) ;TODO add auth 
 
@@ -26,13 +26,13 @@
     [(yaml/to-string (postgres/generate-pvc))
      (yaml/to-string (postgres/generate-deployment :postgres-image "postgres:14"))
      (yaml/to-string (postgres/generate-service))]
-    [(yaml/to-string (matomo/generate-webserver-deployment))
-     (yaml/to-string (matomo/generate-celeryworker-deployment))
-     (yaml/to-string (matomo/generate-ingress config))
-     (yaml/to-string (matomo/generate-certificate config))
-     (yaml/to-string (matomo/generate-service-redis))
-     (yaml/to-string (matomo/generate-service-webserver))
-     (yaml/to-string (matomo/generate-statefulset))])))
+    [(yaml/to-string (shynet/generate-webserver-deployment))
+     (yaml/to-string (shynet/generate-celeryworker-deployment))
+     (yaml/to-string (shynet/generate-ingress config))
+     (yaml/to-string (shynet/generate-certificate config))
+     (yaml/to-string (shynet/generate-service-redis))
+     (yaml/to-string (shynet/generate-service-webserver))
+     (yaml/to-string (shynet/generate-statefulset))])))
 
 (defn-spec generate any?
   [my-config config?

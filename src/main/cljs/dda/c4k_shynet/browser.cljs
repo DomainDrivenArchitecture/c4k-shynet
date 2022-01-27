@@ -1,22 +1,22 @@
-(ns dda.c4k-matomo.browser
+(ns dda.c4k-shynet.browser
   (:require
    [clojure.tools.reader.edn :as edn]
-   [dda.c4k-matomo.core :as core]
-   [dda.c4k-matomo.matomo :as matomo]
+   [dda.c4k-shynet.core :as core]
+   [dda.c4k-shynet.shynet :as shynet]
    [dda.c4k-common.browser :as br]
    [dda.c4k-common.postgres :as pgc]))
 
 (defn generate-content
   []
   (into [] (concat [(assoc (br/generate-needs-validation) :content
-                           (into [] (concat (br/generate-input-field "fqdn" "Your fqdn:" "matomo-neu.prod.meissa-gmbh.de")
-                                            (br/generate-input-field "matomo-data-volume-path" "(Optional) Your matomo-data-volume-path:" "/var/matomo")
+                           (into [] (concat (br/generate-input-field "fqdn" "Your fqdn:" "shynet-neu.prod.meissa-gmbh.de")
+                                            (br/generate-input-field "shynet-data-volume-path" "(Optional) Your shynet-data-volume-path:" "/var/shynet")
                                             (br/generate-input-field "postgres-data-volume-path" "(Optional) Your postgres-data-volume-path:" "/var/postgres")
                                             (br/generate-input-field "restic-repository" "(Optional) Your restic-repository:" "restic-repository")
                                             (br/generate-input-field "issuer" "(Optional) Your issuer prod/staging:" "")
                                             [(br/generate-br)]
-                                            (br/generate-text-area "auth" "Your auth.edn:" "{:postgres-db-user \"matomo\"
-         :postgres-db-password \"matomo-db-password\"
+                                            (br/generate-text-area "auth" "Your auth.edn:" "{:postgres-db-user \"shynet\"
+         :postgres-db-password \"shynet-db-password\"
          :aws-access-key-id \"aws-id\"
          :aws-secret-access-key \"aws-secret\"
          :restic-password \"restic-password\"}"
@@ -33,14 +33,14 @@
    (generate-content)})
 
 (defn config-from-document []
-  (let [matomo-data-volume-path (br/get-content-from-element "matomo-data-volume-path" :optional true)
+  (let [shynet-data-volume-path (br/get-content-from-element "shynet-data-volume-path" :optional true)
         postgres-data-volume-path (br/get-content-from-element "postgres-data-volume-path" :optional true)
         restic-repository (br/get-content-from-element "restic-repository" :optional true)
         issuer (br/get-content-from-element "issuer" :optional true :deserializer keyword)]
     (merge
      {:fqdn (br/get-content-from-element "fqdn")}
-     (when (some? matomo-data-volume-path)
-       {:matomo-data-volume-path matomo-data-volume-path})
+     (when (some? shynet-data-volume-path)
+       {:shynet-data-volume-path shynet-data-volume-path})
      (when (some? postgres-data-volume-path)
        {:postgres-data-volume-path postgres-data-volume-path})
      (when (some? restic-repository)
@@ -50,10 +50,10 @@
      )))
 
 (defn validate-all! []
-  (br/validate! "fqdn" ::matomo/fqdn)
-  (br/validate! "matomo-data-volume-path" ::matomo/matomo-data-volume-path :optional true)
+  (br/validate! "fqdn" ::shynet/fqdn)
+  (br/validate! "shynet-data-volume-path" ::shynet/shynet-data-volume-path :optional true)
   (br/validate! "postgres-data-volume-path" ::pgc/postgres-data-volume-path :optional true)
-  (br/validate! "issuer" ::matomo/issuer :optional true :deserializer keyword)
+  (br/validate! "issuer" ::shynet/issuer :optional true :deserializer keyword)
   (br/validate! "auth" core/auth? :deserializer edn/read-string)
   (br/set-validated!))
 
@@ -73,7 +73,7 @@
                                    (br/get-content-from-element "auth" :deserializer edn/read-string))
                                   (br/set-output!)))))
   (add-validate-listener "fqdn")
-  (add-validate-listener "matomo-data-volume-path")
+  (add-validate-listener "shynet-data-volume-path")
   (add-validate-listener "postgres-data-volume-path")
   (add-validate-listener "restic-repository")
   (add-validate-listener "issuer")

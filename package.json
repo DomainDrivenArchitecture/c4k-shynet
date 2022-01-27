@@ -1,18 +1,18 @@
 {
-  "name": "c4k-matomo",
-  "description": "Generate c4k yaml for a matomo deployment.",
+  "name": "c4k-shynet",
+  "description": "Generate c4k yaml for a shynet deployment.",
   "author": "meissa GmbH",
   "version": "1.0.4-SNAPSHOT",
-  "homepage": "https://gitlab.com/domaindrivenarchitecture/c4k-matomo#readme",
-  "repository": "https://www.npmjs.com/package/c4k-matomo",
+  "homepage": "https://gitlab.com/domaindrivenarchitecture/c4k-shynet#readme",
+  "repository": "https://www.npmjs.com/package/c4k-shynet",
   "license": "APACHE2",
-  "main": "c4k-matomo.js",
+  "main": "c4k-shynet.js",
   "bin": {
-    "c4k-matomo": "./c4k-matomo.js"
+    "c4k-shynet": "./c4k-shynet.js"
   },
   "keywords": [
     "cljs",
-    "matomo",
+    "shynet",
     "k8s",
     "c4k",
     "deployment",
@@ -20,7 +20,7 @@
     "convention4kubernetes"
   ],
   "bugs": {
-    "url": "https://gitlab.com/domaindrivenarchitecture/c4k-matomo/issues"
+    "url": "https://gitlab.com/domaindrivenarchitecture/c4k-shynet/issues"
   },
   "dependencies": {
     "js-base64": "^3.6.1",

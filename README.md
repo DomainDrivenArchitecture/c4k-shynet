@@ -1,4 +1,4 @@
-# c4k-matomo
+# c4k-shynet
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/domaindrivenarchitecture/c4k-matomo.git
+git remote add origin https://gitlab.com/domaindrivenarchitecture/c4k-shynet.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:e2a9c69713642ba95e355c012bccb082?https://gitlab.com/domaindrivenarchitecture/c4k-matomo/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:e2a9c69713642ba95e355c012bccb082?https://gitlab.com/domaindrivenarchitecture/c4k-shynet/-/settings/integrations)
 
 ## Collaborate with your team
 

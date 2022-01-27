@@ -1,8 +1,8 @@
-(ns dda.c4k-matomo.matomo-test
+(ns dda.c4k-shynet.shynet-test
   (:require
    #?(:clj [clojure.test :refer [deftest is are testing run-tests]]
       :cljs [cljs.test :refer-macros [deftest is are testing run-tests]])
-   [dda.c4k-matomo.matomo :as cut]))
+   [dda.c4k-shynet.shynet :as cut]))
 
 
 (deftest should-generate-webserver-deployment

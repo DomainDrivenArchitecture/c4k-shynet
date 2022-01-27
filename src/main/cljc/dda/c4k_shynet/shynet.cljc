@@ -1,4 +1,4 @@
-(ns dda.c4k-matomo.matomo
+(ns dda.c4k-shynet.shynet
  (:require
   [clojure.spec.alpha :as s]
   #?(:cljs [shadow.resource :as rc])
@@ -10,34 +10,34 @@
 (s/def ::issuer pred/letsencrypt-issuer?)
 
 #?(:cljs
-   (defmethod yaml/load-resource :matomo [resource-name]
+   (defmethod yaml/load-resource :shynet [resource-name]
      (case resource-name
-       "matomo/certificate.yaml" (rc/inline "matomo/certificate.yaml")
-       "matomo/deployments.yaml" (rc/inline "matomo/deployments.yaml")
-       "matomo/ingress.yaml" (rc/inline "matomo/ingress.yaml")  
-       "matomo/service-redis.yaml" (rc/inline "matomo/service-redis.yaml")
-       "matomo/service-webserver.yaml" (rc/inline "matomo/service-webserver.yaml")
-       "matomo/statefulset.yaml" (rc/inline "matomo/statefulset.yaml")
+       "shynet/certificate.yaml" (rc/inline "shynet/certificate.yaml")
+       "shynet/deployments.yaml" (rc/inline "shynet/deployments.yaml")
+       "shynet/ingress.yaml" (rc/inline "shynet/ingress.yaml")  
+       "shynet/service-redis.yaml" (rc/inline "shynet/service-redis.yaml")
+       "shynet/service-webserver.yaml" (rc/inline "shynet/service-webserver.yaml")
+       "shynet/statefulset.yaml" (rc/inline "shynet/statefulset.yaml")
        (throw (js/Error. "Undefined Resource!")))))
  
 (defn generate-certificate [config]
   (let [{:keys [fqdn issuer]} config
         letsencrypt-issuer (str "letsencrypt-" (name issuer) "-issuer")]
     (->
-     (yaml/from-string (yaml/load-resource "matomo/certificate.yaml"))
+     (yaml/from-string (yaml/load-resource "shynet/certificate.yaml"))
      (assoc-in [:spec :commonName] fqdn)
      (assoc-in [:spec :dnsNames] [fqdn])
      (assoc-in [:spec :issuerRef :name] letsencrypt-issuer))))
 
 (defn generate-webserver-deployment []
   (let [shynet-application "shynet-webserver"]
-    (-> (yaml/from-string (yaml/load-resource "matomo/deployments.yaml"))
+    (-> (yaml/from-string (yaml/load-resource "shynet/deployments.yaml"))
         (cm/replace-all-matching-values-by-new-value "shynet-application" shynet-application)
         (update-in [:spec :template :spec :containers 0] dissoc :command))))
 
 (defn generate-celeryworker-deployment []
   (let [shynet-application "shynet-celeryworker"]
-    (-> (yaml/from-string (yaml/load-resource "matomo/deployments.yaml"))
+    (-> (yaml/from-string (yaml/load-resource "shynet/deployments.yaml"))
         (cm/replace-all-matching-values-by-new-value "shynet-application" shynet-application))))
 
 (defn generate-ingress [config]
@@ -45,15 +45,15 @@
          :or {issuer :staging}} config
         letsencrypt-issuer (str "letsencrypt-" (name issuer) "-issuer")]
     (->
-     (yaml/from-string (yaml/load-resource "matomo/ingress.yaml"))
+     (yaml/from-string (yaml/load-resource "shynet/ingress.yaml"))
      (assoc-in [:metadata :annotations :cert-manager.io/cluster-issuer] letsencrypt-issuer)
      (cm/replace-all-matching-values-by-new-value "fqdn" fqdn))))
 
 (defn generate-statefulset []
-  (yaml/from-string (yaml/load-resource "matomo/statefulset.yaml")))
+  (yaml/from-string (yaml/load-resource "shynet/statefulset.yaml")))
 
 (defn generate-service-redis []
-  (yaml/from-string (yaml/load-resource "matomo/service-redis.yaml")))
+  (yaml/from-string (yaml/load-resource "shynet/service-redis.yaml")))
 
 (defn generate-service-webserver []
-  (yaml/from-string (yaml/load-resource "matomo/service-webserver.yaml")))
+  (yaml/from-string (yaml/load-resource "shynet/service-webserver.yaml")))
