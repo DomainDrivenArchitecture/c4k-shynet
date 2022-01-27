@@ -3,11 +3,11 @@
   [clojure.spec.alpha :as s]
   #?(:cljs [shadow.resource :as rc])
   [dda.c4k-common.yaml :as yaml]
-  [dda.c4k-common.common :as cm]))
+  [dda.c4k-common.common :as cm]
+  [dda.c4k-common.predicate :as pred]))
 
-(s/def ::fqdn cm/fqdn-string?)
-(s/def ::issuer cm/letsencrypt-issuer?)
-(s/def ::matomo-data-volume-path string?)
+(s/def ::fqdn pred/fqdn-string?)
+(s/def ::issuer pred/letsencrypt-issuer?)
 
 #?(:cljs
    (defmethod yaml/load-resource :matomo [resource-name]

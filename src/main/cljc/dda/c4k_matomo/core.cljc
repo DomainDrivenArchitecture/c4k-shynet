@@ -11,14 +11,21 @@
 (def config-defaults {:issuer :staging})
 
 (def config? (s/keys :req-un [::matomo/fqdn]
-                     :opt-un []))
+                     :opt-un [::matomo/issuer ::postgres/postgres-data-volume-path]))
 
-(def auth? (s/keys :req-un []))
+(def auth? (s/keys :req-un [::postgres/postgres-db-user ::postgres/postgres-db-password])) ;TODO add auth 
 
 (defn k8s-objects [config]
   (into
    []
-   (concat 
+   (concat
+    [(yaml/to-string (postgres/generate-config :postgres-size :2gb :db-name "shynet"))
+     (yaml/to-string (postgres/generate-secret config))]
+    (when (contains? config :postgres-data-volume-path)
+      [(yaml/to-string (postgres/generate-persistent-volume config))])
+    [(yaml/to-string (postgres/generate-pvc))
+     (yaml/to-string (postgres/generate-deployment :postgres-image "postgres:14"))
+     (yaml/to-string (postgres/generate-service))]
     [(yaml/to-string (matomo/generate-webserver-deployment))
      (yaml/to-string (matomo/generate-celeryworker-deployment))
      (yaml/to-string (matomo/generate-ingress config))
