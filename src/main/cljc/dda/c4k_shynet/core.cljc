@@ -13,7 +13,8 @@
 (def config? (s/keys :req-un [::shynet/fqdn]
                      :opt-un [::shynet/issuer ::postgres/postgres-data-volume-path]))
 
-(def auth? (s/keys :req-un [::postgres/postgres-db-user ::postgres/postgres-db-password])) ;TODO add auth 
+(def auth? (s/keys :req-un [::shynet/django-secret-key
+                            ::postgres/postgres-db-user ::postgres/postgres-db-password]))
 
 (defn k8s-objects [config]
   (into
@@ -26,7 +27,8 @@
     [(yaml/to-string (postgres/generate-pvc))
      (yaml/to-string (postgres/generate-deployment :postgres-image "postgres:14"))
      (yaml/to-string (postgres/generate-service))]
-    [(yaml/to-string (shynet/generate-webserver-deployment))
+    [(yaml/to-string (shynet/generate-secret config))
+     (yaml/to-string (shynet/generate-webserver-deployment))
      (yaml/to-string (shynet/generate-celeryworker-deployment))
      (yaml/to-string (shynet/generate-ingress config))
      (yaml/to-string (shynet/generate-certificate config))

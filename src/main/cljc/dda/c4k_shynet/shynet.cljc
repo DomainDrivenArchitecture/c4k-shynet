@@ -8,10 +8,13 @@
 
 (s/def ::fqdn pred/fqdn-string?)
 (s/def ::issuer pred/letsencrypt-issuer?)
+(s/def ::django-secret-key pred/bash-env-string?)
+
 
 #?(:cljs
    (defmethod yaml/load-resource :shynet [resource-name]
      (case resource-name
+       "shynet/secret.yaml" (rc/inline "shynet/secret.yaml")
        "shynet/certificate.yaml" (rc/inline "shynet/certificate.yaml")
        "shynet/deployments.yaml" (rc/inline "shynet/deployments.yaml")
        "shynet/ingress.yaml" (rc/inline "shynet/ingress.yaml")  
@@ -20,6 +23,15 @@
        "shynet/statefulset.yaml" (rc/inline "shynet/statefulset.yaml")
        (throw (js/Error. "Undefined Resource!")))))
  
+(defn generate-secret [config]
+  (let [{:keys [fqdn django-secret-key postgres-db-user postgres-db-password]} config]
+    (->
+     (yaml/from-string (yaml/load-resource "shynet/secret.yaml"))
+     (assoc-in [:stringData :ALLOWED_HOSTS] fqdn)
+     (assoc-in [:stringData :DJANGO_SECRET_KEY] django-secret-key)
+     (assoc-in [:stringData :DB_USER] postgres-db-user)
+     (assoc-in [:stringData :DB_PASSWORD] postgres-db-password))))
+
 (defn generate-certificate [config]
   (let [{:keys [fqdn issuer]} config
         letsencrypt-issuer (str "letsencrypt-" (name issuer) "-issuer")]

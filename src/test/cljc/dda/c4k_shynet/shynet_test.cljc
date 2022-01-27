@@ -79,3 +79,29 @@
            [{:host "test.com"
              :http {:paths [{:backend {:serviceName "shynet-webserver-service", :servicePort 8080}, :path "/"}]}}]}}
          (cut/generate-ingress {:fqdn "test.com" :issuer :staging}))))
+
+(deftest should-generate-secret
+  (is (= {:apiVersion "v1"
+          :kind "Secret"
+          :metadata {:name "shynet-settings"}
+          :type "Opaque"
+          :stringData
+          {:DEBUG "False"
+           :ALLOWED_HOSTS "test.com"
+           :DJANGO_SECRET_KEY "django-pw"
+           :ACCOUNT_SIGNUPS_ENABLED "False"
+           :TIME_ZONE "America/New_York"
+           :REDIS_CACHE_LOCATION
+           "redis://shynet-redis.default.svc.cluster.local/0"
+           :CELERY_BROKER_URL
+           "redis://shynet-redis.default.svc.cluster.local/1"
+           :DB_NAME "shynet"
+           :DB_USER "postgres-user"
+           :DB_PASSWORD "postgres-pw"
+           :DB_HOST "postgresql-service:5432"
+           :EMAIL_HOST_USER ""
+           :EMAIL_HOST_PASSWORD ""
+           :EMAIL_HOST ""
+           :SERVER_EMAIL "Shynet <noreply@shynet.example.com>"}}
+         (cut/generate-secret {:fqdn "test.com" :django-secret-key "django-pw"
+                               :postgres-db-user "postgres-user" :postgres-db-password "postgres-pw"}))))
