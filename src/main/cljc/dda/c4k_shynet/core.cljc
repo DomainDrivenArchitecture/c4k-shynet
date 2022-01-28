@@ -20,7 +20,7 @@
   (into
    []
    (concat
-    [(yaml/to-string (postgres/generate-config :postgres-size :2gb :db-name "shynet"))
+    [(yaml/to-string (postgres/generate-config {:postgres-size :2gb :db-name "shynet"}))
      (yaml/to-string (postgres/generate-secret config))]
     (when (contains? config :postgres-data-volume-path)
       [(yaml/to-string (postgres/generate-persistent-volume config))])
