@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: shynet-application
-        image: milesmcc/shynet:edge
+        image: milesmcc/shynet:v0.12.0
         imagePullPolicy: IfNotPresent
         command: ["./celeryworker.sh"]
         envFrom:
