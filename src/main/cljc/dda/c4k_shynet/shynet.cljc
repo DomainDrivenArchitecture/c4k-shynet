@@ -27,7 +27,8 @@
   (let [{:keys [fqdn django-secret-key postgres-db-user postgres-db-password]} config]
     (->
      (yaml/from-string (yaml/load-resource "shynet/secret.yaml"))
-     (assoc-in [:stringData :ALLOWED_HOSTS] fqdn)
+     ; See comment in secret.yaml
+     ;(assoc-in [:stringData :ALLOWED_HOSTS] fqdn)
      (assoc-in [:stringData :DJANGO_SECRET_KEY] django-secret-key)
      (assoc-in [:stringData :DB_USER] postgres-db-user)
      (assoc-in [:stringData :DB_PASSWORD] postgres-db-password))))
