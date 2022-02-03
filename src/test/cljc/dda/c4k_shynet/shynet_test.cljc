@@ -21,7 +21,7 @@
             :spec
             {:containers
              [{:name "shynet-webserver"
-               :image "milesmcc/shynet:edge"
+               :image "milesmcc/shynet:v0.12.0"
                :imagePullPolicy "IfNotPresent"
                :envFrom [{:secretRef {:name "shynet-settings"}}]}]}}}}
          (cut/generate-webserver-deployment))))
@@ -42,7 +42,7 @@
             :spec
             {:containers
              [{:name "shynet-celeryworker"
-               :image "milesmcc/shynet:edge"
+               :image "milesmcc/shynet:v0.12.0"
                :imagePullPolicy "IfNotPresent"
                :command ["./celeryworker.sh"]
                :envFrom [{:secretRef {:name "shynet-settings"}}]}]}}}}
@@ -66,7 +66,6 @@
           {:name "shynet-webserver-ingress"
            :annotations
            {:cert-manager.io/cluster-issuer "letsencrypt-staging-issuer"
-            :kubernetes.io/ingress.class "addon-http-application-routing"
             :nginx.ingress.kubernetes.io/proxy-body-size "256m"
             :nginx.ingress.kubernetes.io/ssl-redirect "true"
             :nginx.ingress.kubernetes.io/rewrite-target "/"
@@ -77,7 +76,8 @@
           {:tls [{:hosts ["test.com"], :secretName "shynet-secret"}]
            :rules
            [{:host "test.com"
-             :http {:paths [{:backend {:serviceName "shynet-webserver-service", :servicePort 8080}, :path "/"}]}}]}}
+             :http {:paths [{:backend {:service
+                                       {:name "shynet-webserver-service" :port {:number 8080}}}, :path "/", :pathType "Prefix"}]}}]}}
          (cut/generate-ingress {:fqdn "test.com" :issuer :staging}))))
 
 (deftest should-generate-secret
@@ -87,7 +87,7 @@
           :type "Opaque"
           :stringData
           {:DEBUG "False"
-           :ALLOWED_HOSTS "test.com"
+           :ALLOWED_HOSTS "*"
            :DJANGO_SECRET_KEY "django-pw"
            :ACCOUNT_SIGNUPS_ENABLED "False"
            :TIME_ZONE "America/New_York"
@@ -98,7 +98,7 @@
            :DB_NAME "shynet"
            :DB_USER "postgres-user"
            :DB_PASSWORD "postgres-pw"
-           :DB_HOST "postgresql-service:5432"
+           :DB_HOST "postgresql-service"
            :EMAIL_HOST_USER ""
            :EMAIL_HOST_PASSWORD ""
            :EMAIL_HOST ""
