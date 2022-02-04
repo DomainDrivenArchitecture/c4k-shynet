@@ -10,6 +10,11 @@
 (s/def ::issuer pred/letsencrypt-issuer?)
 (s/def ::django-secret-key pred/bash-env-string?)
 
+(defn ingress-type?
+  [input]
+  (contains? #{:traefik :default} input))
+
+(s/def ::ingress-type ingress-type?)
 
 #?(:cljs
    (defmethod yaml/load-resource :shynet [resource-name]
@@ -54,12 +59,14 @@
         (cm/replace-all-matching-values-by-new-value "shynet-application" shynet-application))))
 
 (defn generate-ingress [config]
-  (let [{:keys [fqdn issuer]
-         :or {issuer :staging}} config
-        letsencrypt-issuer (str "letsencrypt-" (name issuer) "-issuer")]
+  (let [{:keys [fqdn issuer ingress-type]
+         :or {issuer :staging ingress-type :default}} config
+        letsencrypt-issuer (str "letsencrypt-" (name issuer) "-issuer")
+        ingress-kind (if (= :default ingress-type) "" (name ingress-type))]
     (->
      (yaml/from-string (yaml/load-resource "shynet/ingress.yaml"))
      (assoc-in [:metadata :annotations :cert-manager.io/cluster-issuer] letsencrypt-issuer)
+     (assoc-in [:metadata :annotations :kubernetes.io/ingress.class] ingress-kind)
      (cm/replace-all-matching-values-by-new-value "fqdn" fqdn))))
 
 (defn generate-statefulset []
