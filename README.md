@@ -32,7 +32,7 @@ target/graalvm/c4k-shynet src/test/resources/valid-config.edn src/test/resources
 
 ## Documentation
 * [Example Setup on Hetzner](doc/SetupOnHetzner.md)
-* [Backup and Restore](doc/BackupAndRestore.md)
+* [Development](doc/Development.md)
 
 ## License
 
