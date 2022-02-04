@@ -1,5 +1,5 @@
 # convention 4 kubernetes: c4k-shynet
-[![Clojars Project](https://img.shields.io/clojars/v/org.domaindrivenarchitecture/c4k-shynet.svg)](https://clojars.org/org.domaindrivenarchitecture/c4k-shynet) [![pipeline status](https://gitlab.com/domaindrivenarchitecture/c4k-shynet/badges/master/pipeline.svg)](https://gitlab.com/domaindrivenarchitecture/c4k-shynet/-/commits/master) 
+[![Clojars Project](https://img.shields.io/clojars/v/org.domaindrivenarchitecture/c4k-shynet.svg)](https://clojars.org/org.domaindrivenarchitecture/c4k-shynet) [![pipeline status](https://gitlab.com/domaindrivenarchitecture/c4k-shynet/badges/master/pipeline.svg)](https://gitlab.com/domaindrivenarchitecture/c4k-shynet/-/commits/main) 
 
 [<img src="https://domaindrivenarchitecture.org/img/delta-chat.svg" width=20 alt="DeltaChat"> chat over e-mail](mailto:buero@meissa-gmbh.de?subject=community-chat) | [<img src="https://meissa-gmbh.de/img/community/Mastodon_Logotype.svg" width=20 alt="team@social.meissa-gmbh.de"> team@social.meissa-gmbh.de](https://social.meissa-gmbh.de/@team) | [Website & Blog](https://domaindrivenarchitecture.org)
 
