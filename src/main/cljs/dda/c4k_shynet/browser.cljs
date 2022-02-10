@@ -14,40 +14,40 @@
 (defn generate-group
   [name
    content]
-  {:type :element
-   :tag :div
-   :attrs {:class "rounded border border-3  m-3 p-2"}
-   :content [{:type :element
-              :tag :b
-              :attrs {:style "z-index: 1; position: relative; top: -1.3rem;"}
-              :content name}
-             {:type :element
-              :tag :fieldset
-              :content content}]})
+  [{:type :element
+    :tag :div
+    :attrs {:class "rounded border border-3  m-3 p-2"}
+    :content [{:type :element
+               :tag :b
+               :attrs {:style "z-index: 1; position: relative; top: -1.3rem;"}
+               :content name}
+              {:type :element
+               :tag :fieldset
+               :content content}]}])
 
 (defn generate-content []
   (concat-vec
    [(assoc
      (br/generate-needs-validation) :content
      (concat-vec
-      [(generate-group
-        "domain"
-        (concat-vec
-         (br/generate-input-field "fqdn" "Your fqdn:" "shynet.prod.meissa-gmbh.de")
-         (br/generate-input-field "issuer" "(Optional) Your issuer prod/staging:" "")))
-       (generate-group
-        "provider"
-        (concat-vec
-         (br/generate-input-field "ingress-type" "(Optional) Your ingress type (traefik/ngingx):" "traefik")
-         (br/generate-input-field "postgres-data-volume-path" "(Optional) Your postgres-data-volume-path:" "/var/postgres")))
-       (generate-group
-        "credentials"
-        (br/generate-text-area
-         "auth" "Your auth.edn:"
-         "{:postgres-db-user \"shynet\"
+      (generate-group
+       "domain"
+       (concat-vec
+        (br/generate-input-field "fqdn" "Your fqdn:" "shynet.prod.meissa-gmbh.de")
+        (br/generate-input-field "issuer" "(Optional) Your issuer prod/staging:" "")))
+      (generate-group
+       "provider"
+       (concat-vec
+        (br/generate-input-field "ingress-type" "(Optional) Your ingress type (traefik/ngingx):" "traefik")
+        (br/generate-input-field "postgres-data-volume-path" "(Optional) Your postgres-data-volume-path:" "/var/postgres")))
+      (generate-group
+       "credentials"
+       (br/generate-text-area
+        "auth" "Your auth.edn:"
+        "{:postgres-db-user \"shynet\"
 :postgres-db-password \"shynet-db-password\"
 :django-secret-key \"djangosecretkey\"}"
-         "5"))]
+        "5"))
       [(br/generate-br)]
       (br/generate-button "generate-button" "Generate c4k yaml")))]
    (br/generate-output "c4k-shynet-output" "Your c4k deployment.yaml:" "25")))
