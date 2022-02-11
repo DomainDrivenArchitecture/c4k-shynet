@@ -1,7 +1,6 @@
 (ns dda.c4k-shynet.browser-test
   (:require
-   #?(:clj [clojure.test :refer [deftest is are testing run-tests]]
-      :cljs [cljs.test :refer-macros [deftest is are testing run-tests]])
+   [cljs.test :refer-macros [deftest is are testing run-tests]]
    [hickory.render :as hr]
    [dda.c4k-shynet.browser :as cut]))
 

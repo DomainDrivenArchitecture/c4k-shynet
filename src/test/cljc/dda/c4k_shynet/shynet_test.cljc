@@ -65,19 +65,22 @@
           :metadata
           {:name "shynet-webserver-ingress"
            :annotations
-           {:cert-manager.io/cluster-issuer "letsencrypt-staging-issuer"
-            :nginx.ingress.kubernetes.io/proxy-body-size "256m"
-            :nginx.ingress.kubernetes.io/ssl-redirect "true"
-            :nginx.ingress.kubernetes.io/rewrite-target "/"
-            :nginx.ingress.kubernetes.io/proxy-connect-timeout "300"
-            :nginx.ingress.kubernetes.io/proxy-send-timeout "300"
-            :nginx.ingress.kubernetes.io/proxy-read-timeout "300"}}
+           {:ingress.kubernetes.io/force-ssl-redirect true
+            :ingress.kubernetes.io/ssl-redirect true
+            :cert-manager.io/cluster-issuer
+            "letsencrypt-staging-issuer"}}
           :spec
           {:tls [{:hosts ["test.com"], :secretName "shynet-secret"}]
            :rules
            [{:host "test.com"
-             :http {:paths [{:backend {:service
-                                       {:name "shynet-webserver-service" :port {:number 8080}}}, :path "/", :pathType "Prefix"}]}}]}}
+             :http
+             {:paths
+              [{:backend
+                {:service
+                 {:name "shynet-webserver-service"
+                  :port {:number 8080}}}
+                :path "/"
+                :pathType "Prefix"}]}}]}}
          (cut/generate-ingress {:fqdn "test.com" :issuer :staging}))))
 
 (deftest should-generate-secret
