@@ -65,8 +65,8 @@
           :metadata
           {:name "shynet-webserver-ingress"
            :annotations
-           {:ingress.kubernetes.io/force-ssl-redirect true
-            :ingress.kubernetes.io/ssl-redirect true
+           {:ingress.kubernetes.io/force-ssl-redirect "true"
+            :ingress.kubernetes.io/ssl-redirect "true"
             :cert-manager.io/cluster-issuer
             "letsencrypt-staging-issuer"}}
           :spec
