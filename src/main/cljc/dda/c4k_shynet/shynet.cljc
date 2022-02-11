@@ -6,15 +6,14 @@
   [dda.c4k-common.common :as cm]
   [dda.c4k-common.predicate :as pred]))
 
-(s/def ::fqdn pred/fqdn-string?)
-(s/def ::issuer pred/letsencrypt-issuer?)
-(s/def ::django-secret-key pred/bash-env-string?)
-
 (defn ingress-type?
   [input]
-  (contains? #{:traefik :default} input))
+  (contains? #{:traefik :nginx} input))
 
+(s/def ::fqdn pred/fqdn-string?)
+(s/def ::issuer pred/letsencrypt-issuer?)
 (s/def ::ingress-type ingress-type?)
+(s/def ::django-secret-key pred/bash-env-string?)
 
 #?(:cljs
    (defmethod yaml/load-resource :shynet [resource-name]
@@ -32,7 +31,7 @@
   (let [{:keys [fqdn django-secret-key postgres-db-user postgres-db-password]} config]
     (->
      (yaml/from-string (yaml/load-resource "shynet/secret.yaml"))
-     ; See comment in secret.yaml
+     ; TODO: See comment in secret.yaml
      ;(assoc-in [:stringData :ALLOWED_HOSTS] fqdn)
      (assoc-in [:stringData :DJANGO_SECRET_KEY] django-secret-key)
      (assoc-in [:stringData :DB_USER] postgres-db-user)
