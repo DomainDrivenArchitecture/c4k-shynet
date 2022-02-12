@@ -34,7 +34,7 @@
 
 (defn generate-certificate [config]
   (let [{:keys [fqdn issuer]} config
-        letsencrypt-issuer (str "letsencrypt-" (name issuer) "-issuer")]
+        letsencrypt-issuer (name issuer)]
     (->
      (yaml/from-string (yaml/load-resource "shynet/certificate.yaml"))
      (assoc-in [:spec :commonName] fqdn)
@@ -55,7 +55,7 @@
 (defn generate-ingress [config]
   (let [{:keys [fqdn issuer]
          :or {issuer :staging}} config
-        letsencrypt-issuer (str "letsencrypt-" (name issuer) "-issuer")]
+        letsencrypt-issuer (name issuer)]
     (->
      (yaml/from-string (yaml/load-resource "shynet/ingress.yaml"))
      (assoc-in [:metadata :annotations :cert-manager.io/cluster-issuer] letsencrypt-issuer)

@@ -56,7 +56,7 @@
           {:secretName "shynet-secret"
            :commonName "test.com"
            :dnsNames ["test.com"]
-           :issuerRef {:name "letsencrypt-staging-issuer", :kind "ClusterIssuer"}}}
+           :issuerRef {:name "staging", :kind "ClusterIssuer"}}}
          (cut/generate-certificate {:fqdn "test.com" :issuer :staging}))))
 
 (deftest should-generate-ingress
@@ -68,7 +68,7 @@
            {:ingress.kubernetes.io/force-ssl-redirect "true"
             :ingress.kubernetes.io/ssl-redirect "true"
             :cert-manager.io/cluster-issuer
-            "letsencrypt-staging-issuer"}}
+            "staging"}}
           :spec
           {:tls [{:hosts ["test.com"], :secretName "shynet-secret"}]
            :rules
