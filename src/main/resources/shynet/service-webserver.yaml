@@ -8,3 +8,4 @@ spec:
   - port: 8080
   selector:
     app: shynet-webserver
+  externalTrafficPolicy: Local
