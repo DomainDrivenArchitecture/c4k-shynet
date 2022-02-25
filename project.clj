@@ -1,4 +1,4 @@
-(defproject org.domaindrivenarchitecture/c4k-shynet "1.0.4-SNAPSHOT"
+(defproject org.domaindrivenarchitecture/c4k-shynet "1.0.4"
   :description "shynet c4k-installation package"
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
@@ -30,7 +30,7 @@
                   ["vcs" "assert-committed"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
                   ["vcs" "commit"]
-                  ["vcs" "tag"]
+                  ["vcs" "tag" "v" "--no-sign"]
                   ["change" "version" "leiningen.release/bump-version"]]
   :aliases {"native" ["shell"
                       "native-image"
