@@ -1,4 +1,4 @@
-(defproject org.domaindrivenarchitecture/c4k-shynet "1.0.2-SNAPSHOT"
+(defproject org.domaindrivenarchitecture/c4k-shynet "1.0.2"
   :description "shynet c4k-installation package"
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
