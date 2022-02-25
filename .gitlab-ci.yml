@@ -104,6 +104,14 @@ upload-clj-prerelease:
   script:
     - lein deploy clojars
 
+upload-clj-release:
+  <<: *clj
+  stage: upload
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG != null'
+  script:
+    - lein deploy clojars
+
 release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   stage: upload
