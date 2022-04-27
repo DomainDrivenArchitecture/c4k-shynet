@@ -89,7 +89,7 @@
       (.getElementById "generate-button")
       (.addEventListener "click"
                          #(do (validate-all!)
-                              (-> (core/generate
+                              (-> (core/generate ;TODO: common/generate (?)
                                    (config-from-document)
                                    (br/get-content-from-element "auth" :deserializer edn/read-string))
                                   (br/set-output!)))))

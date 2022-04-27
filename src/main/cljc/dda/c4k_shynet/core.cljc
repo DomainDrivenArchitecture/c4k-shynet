@@ -19,24 +19,24 @@
 
 (defn k8s-objects [config]
   (let [storage-class (if (contains? config :postgres-data-volume-path) :manual :local-path)]
-  (cm/concat-vec
-   [(yaml/to-string (postgres/generate-config {:postgres-size :2gb :db-name "shynet"}))
-    (yaml/to-string (postgres/generate-secret config))]
-   (when (contains? config :postgres-data-volume-path)
-     [(yaml/to-string (postgres/generate-persistent-volume (select-keys config [:postgres-data-volume-path :pv-storage-size-gb])))])
-   [(yaml/to-string (postgres/generate-pvc {:pv-storage-size-gb 20
-                                            :pvc-storage-class-name storage-class}))
-    (yaml/to-string (postgres/generate-deployment {:postgres-image "postgres:14"
-                                                   :postgres-size :2gb}))
-    (yaml/to-string (postgres/generate-service))
-    (yaml/to-string (shynet/generate-secret config))
-    (yaml/to-string (shynet/generate-webserver-deployment))
-    (yaml/to-string (shynet/generate-celeryworker-deployment))
-    (yaml/to-string (shynet/generate-ingress config))
-    (yaml/to-string (shynet/generate-certificate config))
-    (yaml/to-string (shynet/generate-service-redis))
-    (yaml/to-string (shynet/generate-service-webserver))
-    (yaml/to-string (shynet/generate-statefulset))])))
+    (map yaml/to-string
+         [(postgres/generate-config {:postgres-size :2gb :db-name "shynet"})
+          (postgres/generate-secret config)
+          (when (contains? config :postgres-data-volume-path)
+            (postgres/generate-persistent-volume (select-keys config [:postgres-data-volume-path :pv-storage-size-gb])))
+          (postgres/generate-pvc {:pv-storage-size-gb 20
+                                  :pvc-storage-class-name storage-class})
+          (postgres/generate-deployment {:postgres-image "postgres:14"
+                                         :postgres-size :2gb})
+          (postgres/generate-service)
+          (shynet/generate-secret config)
+          (shynet/generate-webserver-deployment)
+          (shynet/generate-celeryworker-deployment)
+          (shynet/generate-ingress config)
+          (shynet/generate-certificate config)
+          (shynet/generate-service-redis)
+          (shynet/generate-service-webserver)
+          (shynet/generate-statefulset)])))
 
 (defn-spec generate any?
   [my-config config?
