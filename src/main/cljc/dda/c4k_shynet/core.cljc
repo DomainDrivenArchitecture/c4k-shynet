@@ -4,7 +4,6 @@
   [clojure.spec.alpha :as s]
   #?(:clj [orchestra.core :refer [defn-spec]]
      :cljs [orchestra.core :refer-macros [defn-spec]])
-  [dda.c4k-common.common :as cm]
   [dda.c4k-common.yaml :as yaml]
   [dda.c4k-common.postgres :as postgres]
   [dda.c4k-shynet.shynet :as shynet]))
@@ -38,6 +37,7 @@
           (shynet/generate-service-webserver)
           (shynet/generate-statefulset)])))
 
+; TODO: Remove once cljs release of common worked
 (defn-spec generate any?
   [my-config config?
    my-auth auth?]
