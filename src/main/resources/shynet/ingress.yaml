@@ -10,7 +10,7 @@ spec:
   tls:
   - hosts:
     - fqdn
-    secretName: shynet-secret
+    secretName: shynet-cert
   rules:
   - host: fqdn
     http:
