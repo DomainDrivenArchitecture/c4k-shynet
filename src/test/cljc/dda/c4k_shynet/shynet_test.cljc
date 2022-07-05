@@ -53,8 +53,10 @@
           :kind "Certificate"
           :metadata {:name "shynet-cert", :namespace "default"}
           :spec
-          {:secretName "shynet-secret"
+          {:secretName "shynet-cert"
            :commonName "test.com"
+           :duration "2160h",
+           :renewBefore "360h",
            :dnsNames ["test.com"]
            :issuerRef {:name "staging", :kind "ClusterIssuer"}}}
          (cut/generate-certificate {:fqdn "test.com" :issuer :staging}))))
@@ -70,7 +72,7 @@
             :cert-manager.io/cluster-issuer
             "staging"}}
           :spec
-          {:tls [{:hosts ["test.com"], :secretName "shynet-secret"}]
+          {:tls [{:hosts ["test.com"], :secretName "shynet-cert"}]
            :rules
            [{:host "test.com"
              :http
