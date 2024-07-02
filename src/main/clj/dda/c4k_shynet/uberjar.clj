@@ -5,4 +5,4 @@
    [dda.c4k-common.uberjar :as uberjar]))
 
 (defn -main [& cmd-args]
-  (uberjar/main-common "c4k-shynet" core/config? core/auth? core/config-defaults core/k8s-objects cmd-args))
+  (uberjar/main-cm "c4k-shynet" core/config? core/auth? core/config-defaults core/config-objects core/auth-objects cmd-args))

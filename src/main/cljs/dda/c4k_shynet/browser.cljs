@@ -72,7 +72,7 @@
   (br/validate! "issuer" ::shynet/issuer :optional true :deserializer keyword)
   (br/validate! "postgres-data-volume-path" ::pgc/postgres-data-volume-path :optional true)
   (br/validate! "auth" core/auth? :deserializer edn/read-string)
-  (br/set-validated!))
+  (br/set-form-validated!))
 
 (defn add-validate-listener [name]
   (-> (br/get-element-by-id name)
@@ -81,16 +81,21 @@
 
 (defn init []
   (br/append-hickory (generate-content-div))
-  (-> js/document
-      (.getElementById "generate-button")
-      (.addEventListener "click"
-                         #(do (validate-all!)
-                              (-> (cm/generate-common
-                                   (config-from-document)
-                                   (br/get-content-from-element "auth" :deserializer edn/read-string)
-                                   core/config-defaults
-                                   core/k8s-objects)
-                                  (br/set-output!)))))
+  (let [config-only false
+        auth-only false]
+    (-> js/document
+        (.getElementById "generate-button")
+        (.addEventListener "click"
+                           #(do (validate-all!)
+                                (-> (cm/generate-cm
+                                     (config-from-document)
+                                     (br/get-content-from-element "auth" :deserializer edn/read-string)
+                                     core/config-defaults
+                                     core/config-objects
+                                     core/auth-objects
+                                     config-only
+                                     auth-only)
+                                    (br/set-output!))))))
   (add-validate-listener "fqdn")
   (add-validate-listener "postgres-data-volume-path")
   (add-validate-listener "issuer")

@@ -4,13 +4,14 @@
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.11.1"]
-                 [org.clojure/tools.reader "1.3.6"]
-                 [org.domaindrivenarchitecture/c4k-common-clj "2.0.3"]
+                 [org.clojure/tools.reader "1.4.2"]
+                 [org.domaindrivenarchitecture/c4k-common-clj "6.4.0"]
                  [hickory "0.7.1" :exclusions [viebel/codox-klipse-theme]]]
   :target-path "target/%s/"
   :source-paths ["src/main/cljc"
                  "src/main/clj"]
-  :resource-paths ["src/main/resources"]
+  :resource-paths ["src/main/resources"
+                   "project.clj"]
   :repositories [["snapshots" :clojars]
                  ["releases" :clojars]]
   :deploy-repositories [["snapshots" {:sign-releases false :url "https://clojars.org/repo"}]
@@ -22,10 +23,10 @@
              :uberjar {:aot :all
                        :main dda.c4k-shynet.uberjar
                        :uberjar-name "c4k-shynet-standalone.jar"
-                       :dependencies [[org.clojure/tools.cli "1.0.214"]
-                                      [ch.qos.logback/logback-classic "1.4.5"
+                       :dependencies [[org.clojure/tools.cli "1.1.230"]
+                                      [ch.qos.logback/logback-classic "1.5.6"
                                        :exclusions [com.sun.mail/javax.mail]]
-                                      [org.slf4j/jcl-over-slf4j "2.0.6"]]}}
+                                      [org.slf4j/jcl-over-slf4j "2.0.13"]]}}
   :release-tasks [["test"]
                   ["vcs" "assert-committed"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
