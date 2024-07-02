@@ -8,12 +8,12 @@
    [dda.c4k-shynet.core :as cut]))
 
 #?(:cljs
-   (defmethod yaml/load-resource :jitsi-test [resource-name]
+   (defmethod yaml/load-resource :shynet-test [resource-name]
      (case resource-name
-       "valid-auth.yaml"   (rc/inline "valid-auth.yaml")
-       "valid-config.yaml" (rc/inline "valid-config.yaml")
+       "shynet-test/valid-auth.yaml"   (rc/inline "shynet-test/valid-auth.yaml")
+       "shynet-test/valid-config.yaml" (rc/inline "shynet-test/valid-config.yaml")
        (throw (js/Error. "Undefined Resource!")))))
 
 (deftest validate-valid-resources
-  (is (s/valid? cut/config? (yaml/load-as-edn "valid-config.yaml")))
-  (is (s/valid? cut/auth? (yaml/load-as-edn "valid-auth.yaml"))))
+  (is (s/valid? cut/config? (yaml/load-as-edn "shynet-test/valid-config.yaml")))
+  (is (s/valid? cut/auth? (yaml/load-as-edn "shynet-test/valid-auth.yaml"))))

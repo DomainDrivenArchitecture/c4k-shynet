@@ -48,42 +48,34 @@
                :envFrom [{:secretRef {:name "shynet-settings"}}]}]}}}}
          (cut/generate-celeryworker-deployment))))
 
-(deftest should-generate-certificate
-  (is (= {:apiVersion "cert-manager.io/v1"
-          :kind "Certificate"
-          :metadata {:name "shynet-cert", :namespace "default"}
-          :spec
-          {:secretName "shynet-cert"
-           :commonName "test.com"
-           :duration "2160h",
-           :renewBefore "360h",
-           :dnsNames ["test.com"]
-           :issuerRef {:name "staging", :kind "ClusterIssuer"}}}
-         (cut/generate-certificate {:fqdn "test.com" :issuer :staging}))))
-
-(deftest should-generate-ingress
-  (is (= {:apiVersion "networking.k8s.io/v1"
-          :kind "Ingress"
-          :metadata
-          {:name "shynet-webserver-ingress"
-           :annotations
-           {:ingress.kubernetes.io/force-ssl-redirect "true"
-            :ingress.kubernetes.io/ssl-redirect "true"
-            :cert-manager.io/cluster-issuer
-            "staging"}}
-          :spec
-          {:tls [{:hosts ["test.com"], :secretName "shynet-cert"}]
-           :rules
-           [{:host "test.com"
-             :http
-             {:paths
-              [{:backend
-                {:service
-                 {:name "shynet-webserver-service"
-                  :port {:number 8080}}}
-                :path "/"
-                :pathType "Prefix"}]}}]}}
-         (cut/generate-ingress {:fqdn "test.com" :issuer :staging}))))
+(deftest should-generate-ingress-and-cert
+  (is (= [{:apiVersion "cert-manager.io/v1",
+           :kind "Certificate",
+           :metadata
+           {:name nil,
+            :labels {:app.kubernetes.part-of nil},
+            :namespace "default"},
+           :spec
+           {:secretName nil,
+            :commonName nil,
+            :duration "2160h",
+            :renewBefore "720h",
+            :dnsNames nil,
+            :issuerRef {:name "staging", :kind "ClusterIssuer"}}}
+          {:apiVersion "networking.k8s.io/v1",
+           :kind "Ingress",
+           :metadata
+           {:namespace "default",
+            :annotations
+            {:traefik.ingress.kubernetes.io/router.entrypoints
+             "web, websecure",
+             :traefik.ingress.kubernetes.io/router.middlewares
+             "default-redirect-https@kubernetescrd",
+             :metallb.universe.tf/address-pool "public"},
+            :name nil,
+            :labels {:app.kubernetes.part-of nil}},
+           :spec {:tls [{:hosts nil, :secretName nil}], :rules []}}]
+         (cut/generate-ingress-and-cert {:fqdn "test.com" :issuer :staging}))))
 
 (deftest should-generate-secret
   (is (= {:apiVersion "v1"

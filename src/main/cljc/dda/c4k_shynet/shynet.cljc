@@ -15,7 +15,6 @@
    (defmethod yaml/load-resource :shynet [resource-name]
      (case resource-name
        "shynet/secret.yaml" (rc/inline "shynet/secret.yaml")
-       "shynet/certificate.yaml" (rc/inline "shynet/certificate.yaml")
        "shynet/deployments.yaml" (rc/inline "shynet/deployments.yaml")
        "shynet/service-redis.yaml" (rc/inline "shynet/service-redis.yaml")
        "shynet/service-webserver.yaml" (rc/inline "shynet/service-webserver.yaml")
@@ -43,7 +42,7 @@
     (-> (yaml/load-as-edn "shynet/deployments.yaml")
         (cm/replace-all-matching "shynet-application" shynet-application))))
 
-(defn generate-ingress [config]
+(defn generate-ingress-and-cert [config]
   (ing/generate-ingress-and-cert config))
 
 (defn generate-statefulset []

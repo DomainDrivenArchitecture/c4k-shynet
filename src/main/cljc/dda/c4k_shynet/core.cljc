@@ -16,6 +16,7 @@
 
 (def config? (s/keys :req-un [::shynet/fqdn]
                      :opt-un [::shynet/issuer
+                              ::postgres/postgres-data-volume-path
                               ::mon-cfg]))
 
 (def auth? (s/keys :req-un [::shynet/django-secret-key
@@ -35,7 +36,7 @@
           (postgres/generate-service config)
           (shynet/generate-webserver-deployment)
           (shynet/generate-celeryworker-deployment)
-          (shynet/generate-ingress config)
+          (shynet/generate-ingress-and-cert config)
           (shynet/generate-service-redis)
           (shynet/generate-service-webserver)
           (shynet/generate-statefulset)

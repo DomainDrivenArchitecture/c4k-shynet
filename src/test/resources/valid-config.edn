@@ -1,6 +1,0 @@
-{:fqdn "statistics.test.meissa-gmbh.de"
- :issuer "staging" 
- :postgres-data-volume-path "/var/postgres"
- :mon-cfg {:grafana-cloud-url "url-for-your-prom-remote-write-endpoint"
-                                                     :k3s-cluster-name "jitsi"
-                                                     :k3s-cluster-stage "test"}}
