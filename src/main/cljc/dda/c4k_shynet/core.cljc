@@ -30,7 +30,6 @@
           (shynet/generate-webserver-deployment)
           (shynet/generate-celeryworker-deployment)
           (shynet/generate-ingress config)
-          (shynet/generate-certificate config)
           (shynet/generate-service-redis)
           (shynet/generate-service-webserver)
           (shynet/generate-statefulset)])))

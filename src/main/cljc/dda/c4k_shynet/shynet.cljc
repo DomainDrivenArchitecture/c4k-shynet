@@ -4,7 +4,8 @@
   #?(:cljs [shadow.resource :as rc])
   [dda.c4k-common.yaml :as yaml]
   [dda.c4k-common.common :as cm]
-  [dda.c4k-common.predicate :as pred]))
+  [dda.c4k-common.predicate :as pred]
+  [dda.c4k-common.ingress :as ing]))
 
 (s/def ::fqdn pred/fqdn-string?)
 (s/def ::issuer pred/letsencrypt-issuer?)
@@ -16,7 +17,6 @@
        "shynet/secret.yaml" (rc/inline "shynet/secret.yaml")
        "shynet/certificate.yaml" (rc/inline "shynet/certificate.yaml")
        "shynet/deployments.yaml" (rc/inline "shynet/deployments.yaml")
-       "shynet/ingress.yaml" (rc/inline "shynet/ingress.yaml")  
        "shynet/service-redis.yaml" (rc/inline "shynet/service-redis.yaml")
        "shynet/service-webserver.yaml" (rc/inline "shynet/service-webserver.yaml")
        "shynet/statefulset.yaml" (rc/inline "shynet/statefulset.yaml")
@@ -32,15 +32,6 @@
      (assoc-in [:stringData :DB_USER] postgres-db-user)
      (assoc-in [:stringData :DB_PASSWORD] postgres-db-password))))
 
-(defn generate-certificate [config]
-  (let [{:keys [fqdn issuer]} config
-        letsencrypt-issuer (name issuer)]
-    (->
-     (yaml/load-as-edn "shynet/certificate.yaml")
-     (assoc-in [:spec :commonName] fqdn)
-     (assoc-in [:spec :dnsNames] [fqdn])
-     (assoc-in [:spec :issuerRef :name] letsencrypt-issuer))))
-
 (defn generate-webserver-deployment []
   (let [shynet-application "shynet-webserver"]
     (-> (yaml/load-as-edn "shynet/deployments.yaml")
@@ -53,13 +44,7 @@
         (cm/replace-all-matching "shynet-application" shynet-application))))
 
 (defn generate-ingress [config]
-  (let [{:keys [fqdn issuer]
-         :or {issuer :staging}} config
-        letsencrypt-issuer (name issuer)]
-    (->
-     (yaml/load-as-edn "shynet/ingress.yaml")
-     (assoc-in [:metadata :annotations :cert-manager.io/cluster-issuer] letsencrypt-issuer)
-     (cm/replace-all-matching "fqdn" fqdn))))
+  (ing/generate-ingress-and-cert config))
 
 (defn generate-statefulset []
   (yaml/load-as-edn "shynet/statefulset.yaml"))
