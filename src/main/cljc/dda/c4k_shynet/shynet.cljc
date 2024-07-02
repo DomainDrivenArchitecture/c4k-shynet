@@ -1,7 +1,7 @@
 (ns dda.c4k-shynet.shynet
  (:require
   [clojure.spec.alpha :as s]
-  #?(:cljs [shadow.resource :as rc])
+  #?(:cljs [dda.c4k-common.macros :refer-macros [inline-resources]])
   [dda.c4k-common.yaml :as yaml]
   [dda.c4k-common.common :as cm]
   [dda.c4k-common.predicate :as cp]
@@ -13,13 +13,7 @@
 
 #?(:cljs
    (defmethod yaml/load-resource :shynet [resource-name]
-     (case resource-name
-       "shynet/secret.yaml" (rc/inline "shynet/secret.yaml")
-       "shynet/deployments.yaml" (rc/inline "shynet/deployments.yaml")
-       "shynet/service-redis.yaml" (rc/inline "shynet/service-redis.yaml")
-       "shynet/service-webserver.yaml" (rc/inline "shynet/service-webserver.yaml")
-       "shynet/statefulset.yaml" (rc/inline "shynet/statefulset.yaml")
-       (throw (js/Error. "Undefined Resource!")))))
+     (get (inline-resources "shynet") resource-name)))
  
 (defn generate-secret [config]
   (let [{:keys [fqdn django-secret-key postgres-db-user postgres-db-password]} config]
