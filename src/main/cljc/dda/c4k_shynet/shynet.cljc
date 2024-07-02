@@ -4,12 +4,12 @@
   #?(:cljs [shadow.resource :as rc])
   [dda.c4k-common.yaml :as yaml]
   [dda.c4k-common.common :as cm]
-  [dda.c4k-common.predicate :as pred]
+  [dda.c4k-common.predicate :as cp]
   [dda.c4k-common.ingress :as ing]))
 
-(s/def ::fqdn pred/fqdn-string?)
-(s/def ::issuer pred/letsencrypt-issuer?)
-(s/def ::django-secret-key pred/bash-env-string?)
+(s/def ::fqdn cp/fqdn-string?)
+(s/def ::issuer cp/letsencrypt-issuer?)
+(s/def ::django-secret-key cp/bash-env-string?)
 
 #?(:cljs
    (defmethod yaml/load-resource :shynet [resource-name]
