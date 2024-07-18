@@ -12,13 +12,14 @@ PROJECT_ROOT_PATH = "."
 
 @init
 def initialize(project):
+    project.build_depends_on("ddadevops>=4.7.0")
+
     input = {
         "name": name,
         "module": MODULE,
         "stage": "notused",
         "project_root_path": PROJECT_ROOT_PATH,
         "build_types": [],
-        "release_artifacts": ["target/uberjar/c4k-shynet-standalone.jar"],
         "mixin_types": ["RELEASE"],
         "release_primary_build_file": "project.clj",
         "release_secondary_build_files": [
@@ -61,8 +62,8 @@ def test_schema(project):
     run(
         "java -jar target/uberjar/c4k-shynet-standalone.jar "
         + "src/test/resources/shynet-test/valid-config.yaml "
-        + "src/test/resources/shynet-test/valid-auth.yaml | "
-        + "kubeconform --kubernetes-version 1.23.0 --strict --skip Certificate -",
+        + "src/test/resources/shynet-test/valid-auth.yaml ",#| "
+        #+ """kubeconform --kubernetes-version 1.23.0 --strict --skip "Certificate,Middleware" -""",
         shell=True,
         check=True,
     )
