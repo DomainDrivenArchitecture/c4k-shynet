@@ -100,5 +100,6 @@
            :EMAIL_HOST_PASSWORD ""
            :EMAIL_HOST ""
            :SERVER_EMAIL "Shynet <noreply@shynet.example.com>"}}
-         (cut/generate-secret {:fqdn "test.com" :django-secret-key "django-pw"
+         (cut/generate-secret {:fqdn "test.com"}
+                              {:django-secret-key "django-pw"
                                :postgres-db-user "postgres-user" :postgres-db-password "postgres-pw"}))))

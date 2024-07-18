@@ -15,8 +15,9 @@
    (defmethod yaml/load-resource :shynet [resource-name]
      (get (inline-resources "shynet") resource-name)))
  
-(defn generate-secret [config]
-  (let [{:keys [fqdn django-secret-key postgres-db-user postgres-db-password]} config]
+(defn generate-secret [config auth]
+  (let [{:keys [fqdn]} config
+        {:keys [django-secret-key postgres-db-user postgres-db-password]} auth]
     (->
      (yaml/load-as-edn "shynet/secret.yaml")
      ; TODO: See comment in secret.yaml

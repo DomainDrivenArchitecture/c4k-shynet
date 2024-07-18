@@ -3,9 +3,9 @@
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
-  :dependencies [[org.clojure/clojure "1.11.1"]
+  :dependencies [[org.clojure/clojure "1.11.3"]
                  [org.clojure/tools.reader "1.4.2"]
-                 [org.domaindrivenarchitecture/c4k-common-clj "6.4.0"]
+                 [org.domaindrivenarchitecture/c4k-common-clj "6.4.2-SNAPSHOT"] ; TODO: Release c4k-common version with refactorings and update here
                  [hickory "0.7.1" :exclusions [viebel/codox-klipse-theme]]]
   :target-path "target/%s/"
   :source-paths ["src/main/cljc"
