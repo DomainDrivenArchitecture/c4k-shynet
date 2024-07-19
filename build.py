@@ -62,8 +62,8 @@ def test_schema(project):
     run(
         "java -jar target/uberjar/c4k-shynet-standalone.jar "
         + "src/test/resources/shynet-test/valid-config.yaml "
-        + "src/test/resources/shynet-test/valid-auth.yaml ",#| "
-        #+ """kubeconform --kubernetes-version 1.23.0 --strict --skip "Certificate,Middleware" -""",
+        + "src/test/resources/shynet-test/valid-auth.yaml | "
+        + """kubeconform --kubernetes-version 1.23.0 --strict --skip "Certificate,Middleware" -""",
         shell=True,
         check=True,
     )
