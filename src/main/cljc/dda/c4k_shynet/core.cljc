@@ -30,7 +30,7 @@
          (filter
           #(not (nil? %))
           (cm/concat-vec
-           [(postgres/generate-config {:postgres-size :2gb :db-name "shynet"})
+           [(postgres/generate-configmap {:postgres-size :2gb :db-name "shynet"})
             (when (contains? config :postgres-data-volume-path)
               (postgres/generate-persistent-volume (select-keys config [:postgres-data-volume-path :pv-storage-size-gb])))
             (postgres/generate-pvc {:pv-storage-size-gb 20
