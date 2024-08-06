@@ -24,10 +24,10 @@
     },
     "dependencies": {
         "js-base64": "^3.6.1",
-        "js-yaml": "^4.0.0"
+        "js-yaml": "^4.1.0"
     },
     "devDependencies": {
         "shadow-cljs": "^2.11.18",
-        "source-map-support": "^0.5.19"
+        "source-map-support": "^0.5.21"
     }
 }
