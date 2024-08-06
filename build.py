@@ -129,10 +129,13 @@ def package_native(project):
         "--no-server " +
         "--no-fallback " +
         "--features=clj_easy.graal_build_time.InitClojureClasses " +
-        f"-jar target/uberjar/{project.name}-standalone.jar " +
+        "-jar target/uberjar/" + project.name + "-standalone.jar " +
+        "-march=compatibility " +
+        "-H:+UnlockExperimentalVMOptions " +
         "-H:IncludeResources=.*.yaml " +
+        "-H:IncludeResources=logback.xml " +
         "-H:Log=registerResource:verbose " +
-        f"-H:Name=target/graalvm/{project.name}",
+        "-H:Name=target/graalvm/" + project.name + "",
         shell=True,
         check=True,
     )
