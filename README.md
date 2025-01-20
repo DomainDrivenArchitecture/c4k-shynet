@@ -40,6 +40,7 @@ Development happens at: https://repo.prod.meissa.de/meissa/c4k-shynet
 
 Mirrors are:
 
+* https://codeberg.org/meissa/c4k-shynet.git
 * https://gitlab.com/domaindrivenarchitecture/c4k-shynet (issues and PR, CI)
 * https://github.com/DomainDrivenArchitecture/c4k-shynet
 
